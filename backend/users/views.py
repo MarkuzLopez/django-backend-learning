@@ -25,6 +25,7 @@ def clients_list_create(request):
 def client_detail_update_delete(request, pk):
     try:
         client = Clients.objects.get(pk=pk)
+        print('The client id', client)
     except Clients.DoesNotExist:
         return Response({'error': 'Client not found'}, status=status.HTTP_404_NOT_FOUND)
     
