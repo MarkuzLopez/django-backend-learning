@@ -17,14 +17,30 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api/user', include('users.urls')),
-#     # path('api/products', include('products.url')),
-# ]
+#swawer
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Mi API',
+        default_version='v1',
+        description='Documentancion  de la API con swawer',
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),  # ✅ CORRECTO
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    #apis my apps created
     path('api/', include('users.urls')),
     path('api/', include('products.urls')),    
+    
+    # Swagger and Redoc    
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
