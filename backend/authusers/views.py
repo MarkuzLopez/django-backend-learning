@@ -5,11 +5,21 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from drf_yasg.utils import swagger_auto_schema
-from .serializers import RegisterSerializerAuth
+from .serializers import RegisterSerializerAuth, LoginSerializerAuth
+from drf_yasg import openapi
 
-@swagger_auto_schema(method='post', request_body=RegisterSerializerAuth, responses={201: "Usuario creado"})
+#schema for logout , apply command migrate
+logout_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    required=['refresh'],
+    properties={
+        'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='Refresh token JWT'),
+    },
+)
+
+@swagger_auto_schema(method='post', request_body=RegisterSerializerAuth, responses={201: RegisterSerializerAuth})
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_view(request):
@@ -24,7 +34,7 @@ def register_view(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #endpoint login personalizado
-@swagger_auto_schema(method='post', responses={200: 'JWT generado'})
+@swagger_auto_schema(method='post', request_body=LoginSerializerAuth, responses={200: 'JWT generado'})
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -42,6 +52,20 @@ def login_view(request):
             'access': str(refresh.access_token),
         })
     return Response({"detail": "Credenciales invalidas"}, status=status.HTTP_401_UNAUTHORIZED)
+
+@swagger_auto_schema(method='post', request_body=logout_schema, operation_description="Logout seguro con blacklist")
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    try:
+        refresh_token =  request.data["refresh"]
+        token = RefreshToken(refresh_token)
+        token.blacklist() # se invalida
+        return Response({"message": "Session cerrada correctamente"}, status=status.HTTP_205_RESET_CONTENT)
+    except KeyError: 
+        return Response({"message": "session cerrada correctamente"}, status=400)
+    except TokenError:
+        return Response({"error": "Token invalido ya usado"}, status=400)
 
 
 # Endpoint protegido

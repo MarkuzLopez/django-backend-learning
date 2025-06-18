@@ -100,3 +100,6 @@ pip freeze > requirements.txt
 
 # Instalar dependencias
 pip install -r requirements.txt
+
+#instalar token_blacklist en commillas
+pip install 'djangorestframework-simplejwt[token_blacklist]'
