@@ -22,14 +22,17 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 
+
+
+#schema for swawer 
 schema_view = get_schema_view(
     openapi.Info(
         title='Mi API',
         default_version='v1',
-        description='Documentancion  de la API con swawer',
+        description='Documentancion  de la API con swawer autenticacion JWt',
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),  # ✅ CORRECTO
+    permission_classes=(permissions.AllowAny,),  #
 )
 
 
@@ -38,7 +41,8 @@ urlpatterns = [
     
     #apis my apps created
     path('api/', include('users.urls')),
-    path('api/', include('products.urls')),    
+    path('api/', include('products.urls')),
+    path('api/', include('authusers.urls')),
     
     # Swagger and Redoc    
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
