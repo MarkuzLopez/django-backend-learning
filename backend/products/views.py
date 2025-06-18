@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
@@ -41,7 +41,7 @@ def product_list_create(request):
 @swagger_auto_schema(method='put', request_body=ProductSerializer, responses={200: ProductSerializer})
 @swagger_auto_schema(method='delete', responses={204: 'Product eliminado'})
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([AllowAny]) #allowany es para  servicio publico
+@permission_classes([IsAuthenticated]) #allowany es para  servicio publico
 def product_delete_put(request, pk):
     """_summary_
     get:
