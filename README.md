@@ -1,4 +1,4 @@
-# 🐍 Proyecto Django - Nombre del Proyecto
+# 🐍 Proyecto Django - Backend basic until intermediate
 
 Este proyecto es una API REST construida con Django y Django REST Framework. Permite [describir brevemente qué hace: gestionar usuarios, clientes, ventas, etc.].
 
